@@ -22,10 +22,12 @@ public class BookableRoom {
      *
      * @param room - the room in the university that this BookableRoom is representing
      * @param timeString - string in format dd/MM/yyyy HH:mm
+     * @throws DateTimeParseException
      */
     public BookableRoom(Room room, String timeString) throws DateTimeParseException {
         this.room = room;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        // TODO validate time is between 7 and 10
         this.slotStart = LocalDateTime.parse(timeString, formatter);
         this.occupancy = 0;
         updateStatus();
@@ -35,8 +37,9 @@ public class BookableRoom {
      * Gets template for the Bookable Room.
      */
     public String getTemplate() {
-        String template = "| " + slotStart + " | " + status + " | " + room.getCode() + " | occupancy: "
-                + " |";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        String template = "| " + slotStart.format(formatter)+ " | " + status + " | " + room.getCode() + " | occupancy: "
+                + occupancy + " |";
         return template;
     }
 

@@ -60,8 +60,6 @@ public class BookingApp {
             choice = input.nextLine();
 
             switch (choice) {
-                case "0":
-                    break;
                 case "1":
                     System.out.println(bookingSystem.listRooms());
                     break;
@@ -87,6 +85,9 @@ public class BookingApp {
                     break;
                 case "10":
                     break;
+                default:
+                    System.out.println("Invalid option");
+
             }
         }
     }
@@ -108,7 +109,7 @@ public class BookingApp {
             ArrayList<Room> rooms = uni.getRooms();
             int index = 11;
             for (Room room : rooms) {
-                System.out.println(index + ". " + room.getTemplate());
+                System.out.println(index + " " + room.getTemplate());
                 index++;
             }
 
@@ -120,59 +121,85 @@ public class BookingApp {
 
             choice = input.nextLine();
 
-            //Splits string into index choice and time string
-            String[] choices = choice.split(" ",2);
-            int i = Integer.parseInt(choices[0]);
+            if (!choice.equals("0") && !choice.equals("-1")) {
 
-            // Gets the chosen room from the rooms list for the inputted user index
-            for (Room room : rooms) {
-                // Checks input is in range
-                if (i < 10 && i <= index) {
+                //Splits string into index choice and time string
+                String[] choices = choice.split(" ", 2);
+                int i = Integer.parseInt(choices[0]);
+
+                // If input is in available range of room indexes
+                if (i > 10 && i <= index) {
                     Room chosenroom = rooms.get(i - 11);
+                    // Adds new Bookable Room to system
                     try {
-                        bookingSystem.addBookableRoom(new BookableRoom(chosenroom, choices[1]);
-                    } catch (IllegalArgumentException e) {
-                        System.out.println("Invalid room code");
-                    } catch (java.time.format.DateTimeParseException d) {
+                        bookingSystem.addBookableRoom(new BookableRoom(chosenroom, choices[1]));
+                        System.out.println("Bookable Room created successfully");
+                    } catch (DateTimeParseException d) {
+                        System.out.println(d.getMessage());
+                    }
+                } else {
+                    System.out.println("Invalid room choice");
+                }
+
+            }
+        }
+    }
+
+    private static void addAssistant(University uni, BookingSystem bookingSystem) {
+        Scanner input = new Scanner(System.in);
+        String choice = "2";
+        while (!choice.equals("0")) {
+            System.out.println("-------------------University of Knowledge - Covid Test-----------------------\n");
+            System.out.println("Adding assistant on shift\n");
+
+            // Lists available assistants from the university
+            ArrayList<Assistant> assistants = uni.getAssistants();
+            int index = 11;
+            for(Assistant assistant: assistants) {
+                System.out.println(index + " " + assistant.getTemplate());
+            }
+
+            System.out.println("Please enter one of the following:\n");
+            System.out.println("The seqential ID of an assistant and date (dd/mm/yyyy), and a time (HH:MM), seperated by a whitespace.");
+            System.out.println("0. Back to main menu");
+            System.out.println("-1 Quit application");
+
+            choice = input.nextLine();
+
+            if (!choice.equals("0") && !choice.equals("-1")) {
+                String[] choices = choice.split(" ", 2);
+                int i = Integer.parseInt(choices[0]
+
+                if (i > 10 && i <= index) {
+                    try {
+                        // Creates assistant on shift using the chosen assistant and the time part of the input string
+
+                        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistants.get(i-10), choices[1]));
+                        System.out.println("Assistant created successfully");
+                    } catch (DateTimeParseException d) {
                         System.out.println("Invalid date format");
                     }
+                } else {
+                    System.out.println("Invalid choice");
                 }
             }
+        }
+    }
 
-            private static void addAssistant (University uni, BookingSystem bookingSystem){
-                Scanner input = new Scanner(System.in);
-                String choice = "2";
-                while (!choice.equals("0")) {
-                    System.out.println("-------------------University of Knowledge - Covid Test-----------------------\n");
-                    System.out.println("Adding assistant on shift\n");
-                    System.out.println(uni.listAssistants());
-                    System.out.println("Please enter one of the following:\n");
-                    System.out.println("The seqential ID of an assistant and date (dd/mm/yyyy), and a time (HH:MM), seperated by a whitespace.");
-                    System.out.println("0. Back to main menu");
-                    System.out.println("-1 Quit application");
+    /*
+    private static void addBooking(University uni, BookingSystem bookingSystem) {
+        Scanner input = new Scanner(System.in);
+        String choice = "2";
 
-                    choice = input.nextLine();
-                    try {
-                        bookingSystem.addAssistantOnShiftFromString(choice, uni);
-                        System.out.println("Assistant created successfully");
-                    } catch (IllegalArgumentException | DateTimeParseException e) {
-                        System.out.println(e.getMessage());
-                    } catch (ArrayIndexOutOfBoundsException g) {
-                        System.out.println("Invalid format of input");
-                    }
-                }
-            }
-
-            private static void addBooking (University uni, BookingSystem bookingSystem){
-                Scanner input = new Scanner(System.in);
-                String choice = "2";
-
-                while (!choice.equals("0")) {
-                    System.out.println("-------------------University of Knowledge - Covid Test-----------------------\n");
-                    System.out.println("Adding Booking\n");
-                    System.out.println(bookingSystem.listSlots());
-                    System.out.println("Please enter one of the following:\n");
-                    System.out.println("The seqential ID of an assistant and date (dd/mm/yyyy), and a time (HH:MM), seperated by a whitespace.");
-                    System.out.println("0. Back to main menu");
-                    System.out.println("-1 Quit application");
-                }
+        while (!choice.equals("0")) {
+            System.out.println("-------------------University of Knowledge - Covid Test-----------------------\n");
+            System.out.println("Adding Booking\n");
+            System.out.println(bookingSystem.listSlots());
+            System.out.println("Please enter one of the following:\n");
+            System.out.println("The seqential ID of an assistant and date (dd/mm/yyyy), and a time (HH:MM), seperated by a whitespace.");
+            System.out.println("0. Back to main menu");
+            System.out.println("-1 Quit application");
+        }
+    }
+     */
+}

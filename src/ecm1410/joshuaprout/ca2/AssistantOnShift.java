@@ -2,6 +2,8 @@ package ecm1410.joshuaprout.ca2;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
 
 /**
  * An assistant available to perform a covid test within a 60 minute window.
@@ -20,7 +22,7 @@ public class AssistantOnShift {
      * @param assistant
      * @param timeString
      */
-    public AssistantOnShift(Assistant assistant, String timeString) {
+    public AssistantOnShift(Assistant assistant, String timeString) throws DateTimeParseException {
         this.assistant = assistant;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         this.shiftStart = LocalDateTime.parse(timeString, formatter);

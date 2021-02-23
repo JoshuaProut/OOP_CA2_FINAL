@@ -43,22 +43,8 @@ public class BookingSystem {
      */
     public void addBookableRoom(BookableRoom bookableRoom) {
         this.bookableRooms.add(bookableRoom);
+        //TODO check if bookable room already exists
     }
-
-    /**
-     * Creates bookable room
-     *
-     * @param timeString in format roomcode dd/mm/yyyy hh:mm
-     * @param uni
-     * @throws IllegalArgumentException
-     */
-    public void addBookableRoomFromString(Room room, String timeString, University uni) throws IllegalArgumentException,
-            java.time.format.DateTimeParseException {
-
-        // Creates room and adds to BookableRooms list
-        addBookableRoom(new BookableRoom(room, split[1]));
-    }
-
 
     /**
      * Adds AssistantOnShift to array
@@ -66,38 +52,23 @@ public class BookingSystem {
      * @param assistantOnShift
      */
     public void addAssistantOnShift(AssistantOnShift assistantOnShift) {
+        //TODO check that assistant not already assigned for same shift
         this.assistantsOnShift.add(assistantOnShift);
+
     }
 
-    /**
-     * Creates and adds Assistant on shift
-     *
-     * @param string in format: AssistantEmail dd/mm/yyyy hh:mm
-     * @param uni
-     * @throws IllegalArgumentException
-     * @throws java.time.format.DateTimeParseException
-     * @throws ArrayIndexOutOfBoundsException
-     */
-    public void addAssistantOnShiftFromString(String string, University uni) throws IllegalArgumentException,
-            java.time.format.DateTimeParseException, ArrayIndexOutOfBoundsException {
-        // Splits strings
-        String[] split = string.split(" ", 2);
-
-        // Gets Assistant from email
-        Assistant assistant = uni.getAssistantByEmail(split[0]);
-
-        // Creates assistant and adds to Assistants on shift array
-        addAssistantOnShift(new AssistantOnShift(assistant, split[1]));
-    }
-
+    /*
     public String listSlots() {
         for (BookableRoom room : bookableRooms) {
             for (AssistantOnShift assistant : assistantsOnShift) {
-                if (room.getSlotStart().equals(assistant.getShiftStart()) {
+                if (room.getSlotStart().equals(assistant.getShiftStart())) {
                 }
             }
         }
+
     }
+
+     */
 
     /**
      * Returns formatted string as lines of BookableRoom template strings
