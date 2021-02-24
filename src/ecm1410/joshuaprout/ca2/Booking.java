@@ -19,8 +19,8 @@ public class Booking {
 
     private LocalDateTime timeStart;
 
-    public Booking(BookableRoom room, AssistantOnShift assistant, int id, String email,
-                   String timeStart) {
+    public Booking(BookableRoom room, AssistantOnShift assistant, String email,
+                   LocalDateTime timeStart) throws IllegalArgumentException {
 
         // Validates room has space
         if (room.getStatus() == "FULL") {
@@ -47,9 +47,7 @@ public class Booking {
         }
         this.email = email;
 
-        // Converts date time
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        this.timeStart = LocalDateTime.parse(timeStart, formatter);
+        this.timeStart = timeStart;
     }
 
     public String getTemplate() {

@@ -1,6 +1,8 @@
 package ecm1410.joshuaprout.ca2;
 
 import java.awt.print.Book;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -31,6 +33,12 @@ public class BookingApp {
 
         //Creates BookingSystem
         BookingSystem bookingSystem = new BookingSystem();
+
+        //Creates assistants on shift
+        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant, "27/02/2021 07:00"));
+
+        //Creates bookable rooms
+        bookingSystem.addBookableRoom(new BookableRoom(room, "27/02/2021 07:00"));
 
 
         Scanner input = new Scanner(System.in);
@@ -80,6 +88,7 @@ public class BookingApp {
                     System.out.println(bookingSystem.listBookings());
                     break;
                 case "8":
+                    addBooking(uni, bookingSystem);
                     break;
                 case "9":
                     break;
@@ -145,6 +154,12 @@ public class BookingApp {
         }
     }
 
+    /**
+     * User chooses an assistant and a start time to create an assistant on shift
+     *
+     * @param uni           - the university that the assistant belongs to
+     * @param bookingSystem - the booking system in use
+     */
     private static void addAssistant(University uni, BookingSystem bookingSystem) {
         Scanner input = new Scanner(System.in);
         String choice = "2";
@@ -155,7 +170,7 @@ public class BookingApp {
             // Lists available assistants from the university
             ArrayList<Assistant> assistants = uni.getAssistants();
             int index = 11;
-            for(Assistant assistant: assistants) {
+            for (Assistant assistant : assistants) {
                 System.out.println(index + " " + assistant.getTemplate());
             }
 
@@ -168,13 +183,13 @@ public class BookingApp {
 
             if (!choice.equals("0") && !choice.equals("-1")) {
                 String[] choices = choice.split(" ", 2);
-                int i = Integer.parseInt(choices[0]
+                int i = Integer.parseInt(choices[0]);
 
                 if (i > 10 && i <= index) {
                     try {
                         // Creates assistant on shift using the chosen assistant and the time part of the input string
 
-                        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistants.get(i-10), choices[1]));
+                        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistants.get(i - 11), choices[1]));
                         System.out.println("Assistant created successfully");
                     } catch (DateTimeParseException d) {
                         System.out.println("Invalid date format");
@@ -186,7 +201,7 @@ public class BookingApp {
         }
     }
 
-    /*
+
     private static void addBooking(University uni, BookingSystem bookingSystem) {
         Scanner input = new Scanner(System.in);
         String choice = "2";
@@ -194,12 +209,42 @@ public class BookingApp {
         while (!choice.equals("0")) {
             System.out.println("-------------------University of Knowledge - Covid Test-----------------------\n");
             System.out.println("Adding Booking\n");
-            System.out.println(bookingSystem.listSlots());
+
+            ArrayList<LocalDateTime> slotTimes = bookingSystem.getSlots();
+            int index = 11;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+            for (LocalDateTime slotTime : slotTimes) {
+                System.out.println(index + " " + slotTime.format(formatter));
+            }
             System.out.println("Please enter one of the following:\n");
-            System.out.println("The seqential ID of an assistant and date (dd/mm/yyyy), and a time (HH:MM), seperated by a whitespace.");
+            System.out.println("The seqential ID of the available time slot and the student email, separated by a whitespace.");
             System.out.println("0. Back to main menu");
             System.out.println("-1 Quit application");
+
+            choice = input.nextLine();
+
+            if (!choice.equals("0") && !choice.equals("-1")) {
+                String[] choices = choice.split(" ", 2);
+                int i = Integer.parseInt(choices[0]);
+
+                if (i > 10 && i <= index) {
+                    try {
+                        // Gives booking system the date and time, for it to match an assistant and room to create the
+                        // booking
+                        bookingSystem.addBookingAtTime(choices[0], choices[1]);
+
+
+                        System.out.println("Booking created successfully");
+                    } catch (DateTimeParseException d) {
+                        System.out.println("Invalid date format");
+                    }
+                } else {
+                    System.out.println("Invalid choice");
+                }
+            }
+
         }
     }
-     */
+
 }

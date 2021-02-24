@@ -1,6 +1,7 @@
 package ecm1410.joshuaprout.ca2;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -57,18 +58,21 @@ public class BookingSystem {
 
     }
 
-    /*
-    public String listSlots() {
+
+    public ArrayList<LocalDateTime> getSlots() {
+        ArrayList<LocalDateTime> availableTimes = new ArrayList<>();
+
+        // Iterates through the room
         for (BookableRoom room : bookableRooms) {
             for (AssistantOnShift assistant : assistantsOnShift) {
-                if (room.getSlotStart().equals(assistant.getShiftStart())) {
+                if (room.getSlotStart().equals(assistant.getShiftStart()) && !availableTimes.contains(assistant.getShiftStart())) {
+                    availableTimes.add(assistant.getShiftStart());
                 }
             }
         }
-
+        return availableTimes;
     }
 
-     */
 
     /**
      * Returns formatted string as lines of BookableRoom template strings
@@ -106,6 +110,44 @@ public class BookingSystem {
             template = template + booking.getTemplate() + "\n";
         }
         return template;
+    }
+
+    public void addBooking(Booking booking) {
+    }
+
+
+    /**
+     * Takes a datetime, and matches a bookable room and assistant at that time
+     *
+     * @param startTimeString
+     */
+    public void addBookingAtTime(String startTimeString, String email) throws IllegalArgumentException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDateTime startTime = LocalDateTime.parse(startTimeString, formatter);
+
+        // Searches through all bookable rooms and assistants on shift, until it finds a valid booking opportunity
+        boolean found = false;
+        for (AssistantOnShift assistant : assistantsOnShift) {
+            for (BookableRoom room : bookableRooms) {
+                /* For a valid booking opportunity, all three of the assistant time, room time and chosen booking time
+                 must match. The assistant must have status FREE and the room can not be full
+                 */
+                if (assistant.getShiftStart().equals(room.getSlotStart()) && assistant.getShiftStart().equals(startTime)
+                        && assistant.getStatus().equals("FREE") && !room.getStatus().equals("FULL")) {
+                    // Adds new booking to the system
+                    addBooking(new Booking(room, assistant, email, assistant.getShiftStart()));
+
+                    //Sets Assistant to busy and increments room occupancy
+                    assistant.setBusy();
+                    room.incOccupancy();
+
+                    found = true;
+                }
+            }
+        }
+        if (found == false) {
+            throw new IllegalArgumentException("Booking could not be created");
+        }
     }
 
 

@@ -35,7 +35,8 @@ public class AssistantOnShift {
      * @return template string
      */
     public String getTemplate() {
-        return "| " + shiftStart + " | " + status + " | " + assistant.getEmail() + " |";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return "| " + shiftStart.format(formatter) + " | " + status + " | " + assistant.getEmail() + " |";
     }
 
     public String getStatus() {
