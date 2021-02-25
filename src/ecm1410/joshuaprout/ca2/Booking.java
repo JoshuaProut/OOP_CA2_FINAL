@@ -61,4 +61,8 @@ public class Booking {
     public String getStatus() {
         return status;
     }
+
+    public void setComplete() {
+        status = "COMPLETED";
+    }
 }

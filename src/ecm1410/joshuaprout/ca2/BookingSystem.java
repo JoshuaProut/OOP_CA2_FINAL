@@ -54,68 +54,9 @@ public class BookingSystem {
 
     }
 
-
-    public ArrayList<LocalDateTime> getSlots() {
-        ArrayList<LocalDateTime> availableTimes = new ArrayList<>();
-
-        // Iterates through the room
-        for (BookableRoom room : bookableRooms) {
-            for (AssistantOnShift assistant : assistantsOnShift) {
-                if (room.getSlotStart().equals(assistant.getShiftStart()) && !availableTimes.contains(assistant.getShiftStart())) {
-                    availableTimes.add(assistant.getShiftStart());
-                }
-            }
-        }
-        return availableTimes;
-    }
-
-
-    /**
-     * Returns formatted string as lines of BookableRoom template strings
-     *
-     * @return formatted template string
-     */
-    public String listRooms() {
-        String template = new String("\n");
-
-        for (BookableRoom room : bookableRooms) {
-            template = template + room.getTemplate() + "\n";
-        }
-        return template;
-    }
-
-    /**
-     * Returns formatted string as lines of AssistantOnShift template strings
-     *
-     * @return formatted template string
-     */
-    public String listAssistants() {
-        String template = new String("\n");
-
-        for (AssistantOnShift assistantOnShift : assistantsOnShift) {
-            template = template + assistantOnShift.getTemplate() + "\n";
-        }
-
-        return template;
-    }
-
-    public String listBookings() {
-        String template = new String("\n");
-
-        for (Booking booking : bookings) {
-            template = template + booking.getTemplate() + "\n";
-        }
-        return template;
-    }
-
-    public ArrayList<Booking> getBookings() {
-        return bookings;
-    }
-
     public void addBooking(Booking booking) {
         bookings.add(booking);
     }
-
 
     /**
      * Takes a datetime, and matches a bookable room and assistant at that time
@@ -148,6 +89,92 @@ public class BookingSystem {
         }
         if (found == false) {
             throw new IllegalArgumentException("Booking could not be created");
+        }
+    }
+
+    public ArrayList<AssistantOnShift> getAssistantsOnShift() {
+        return assistantsOnShift;
+    }
+
+    public ArrayList<Booking> getBookings() {
+        return bookings;
+    }
+
+    public ArrayList<BookableRoom> getBookableRooms() {
+        return bookableRooms;
+    }
+
+    public ArrayList<LocalDateTime> getSlots() {
+        ArrayList<LocalDateTime> availableTimes = new ArrayList<>();
+
+        // Iterates through the room
+        for (BookableRoom room : bookableRooms) {
+            for (AssistantOnShift assistant : assistantsOnShift) {
+                if (room.getSlotStart().equals(assistant.getShiftStart()) && !availableTimes.contains(assistant.getShiftStart())) {
+                    availableTimes.add(assistant.getShiftStart());
+                }
+            }
+        }
+        return availableTimes;
+    }
+
+
+    /**
+     * Returns formatted string as lines of AssistantOnShift template strings
+     *
+     * @return formatted template string
+     */
+    public String listAssistants() {
+        String template = new String("\n");
+
+        for (AssistantOnShift assistantOnShift : assistantsOnShift) {
+            template = template + assistantOnShift.getTemplate() + "\n";
+        }
+
+        return template;
+    }
+
+    public String listBookings() {
+        String template = new String("\n");
+
+        for (Booking booking : bookings) {
+            template = template + booking.getTemplate() + "\n";
+        }
+        return template;
+    }
+
+    /**
+     * Returns formatted string as lines of BookableRoom template strings
+     *
+     * @return formatted template string
+     */
+    public String listRooms() {
+        String template = new String("\n");
+
+        for (BookableRoom room : bookableRooms) {
+            template = template + room.getTemplate() + "\n";
+        }
+        return template;
+    }
+
+    public void removeAssistantOnShift(AssistantOnShift assistantOnShift) {
+        if (assistantOnShift.getStatus().equals("FREE")) {
+            assistantsOnShift.remove(assistantOnShift);
+        }
+    }
+
+    public void removeBooking(Booking booking) throws IllegalArgumentException {
+        // Checks booking is scheduled, if complete it cannot be deleted
+        if (booking.getStatus().equals("SCHEDULED")) {
+            bookings.remove(booking);
+        } else {
+            throw new IllegalArgumentException("Booking is completed, cannot be removed");
+        }
+    }
+
+    public void removeRoom(BookableRoom bookableRoom) {
+        if (bookableRoom.getStatus().equals("EMPTY")) {
+            bookableRooms.remove(bookableRoom);
         }
     }
 
