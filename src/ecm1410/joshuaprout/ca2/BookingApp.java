@@ -93,6 +93,7 @@ public class BookingApp {
                 case "9":
                     break;
                 case "10":
+                    concludeBooking(bookingSystem);
                     break;
                 default:
                     System.out.println("Invalid option");
@@ -145,6 +146,8 @@ public class BookingApp {
                         System.out.println("Bookable Room created successfully");
                     } catch (DateTimeParseException d) {
                         System.out.println(d.getMessage());
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
                     }
                 } else {
                     System.out.println("Invalid room choice");
@@ -201,7 +204,15 @@ public class BookingApp {
         }
     }
 
-
+    /**
+     * Creates a new booking
+     * <p>
+     * Presents user with an indexed list of available timeslots, passes chosen timeslot and student email to
+     * booking system
+     *
+     * @param uni
+     * @param bookingSystem
+     */
     private static void addBooking(University uni, BookingSystem bookingSystem) {
         Scanner input = new Scanner(System.in);
         String choice = "2";
@@ -218,7 +229,7 @@ public class BookingApp {
                 System.out.println(index + " " + slotTime.format(formatter));
             }
             System.out.println("Please enter one of the following:\n");
-            System.out.println("The seqential ID of the available time slot and the student email, separated by a whitespace.");
+            System.out.println("The sequential ID of the available time slot and the student email, separated by a whitespace.");
             System.out.println("0. Back to main menu");
             System.out.println("-1 Quit application");
 
@@ -232,12 +243,12 @@ public class BookingApp {
                     try {
                         // Gives booking system the date and time, for it to match an assistant and room to create the
                         // booking
-                        bookingSystem.addBookingAtTime(choices[0], choices[1]);
-
-
+                        bookingSystem.addBookingAtTime(slotTimes.get(i - 11), choices[1]);
                         System.out.println("Booking created successfully");
                     } catch (DateTimeParseException d) {
                         System.out.println("Invalid date format");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
                     }
                 } else {
                     System.out.println("Invalid choice");
@@ -247,4 +258,26 @@ public class BookingApp {
         }
     }
 
-}
+    private static void concludeBooking(BookingSystem bookingSystem) {
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("University of Knowledge - COVID test\n");
+        ArrayList<Booking> bookings = bookingSystem.getBookings();
+        int i = 11;
+        for (Booking booking : bookings) {
+            if (booking.getStatus().equals("SCHEDULED")) {
+                System.out.println(i + " | " + booking.getTemplate());
+            }
+        }
+        System.out.println("\nPlease enter one of the following:\n");
+        System.out.println("The sequential ID to select the booking to be completed");
+        System.out.println("0. Back to main menu\n-1. Quit application");
+
+        String choice = input.nextLine();
+
+        if (!choice.equals("0") && !choice.equals("-1")){
+
+
+
+
+    }

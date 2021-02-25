@@ -46,14 +46,19 @@ public class Booking {
             throw new IllegalArgumentException("Email must end with 'uok.ac.uk'");
         }
         this.email = email;
-
         this.timeStart = timeStart;
+        this.status = "SCHEDULED";
     }
 
     public String getTemplate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         String template = new String("");
-        template = "| " + timeStart + " | " + status + " | " + assistant.getEmail() + " | " + room.getCode() + " | "
+        template = "| " + timeStart.format(formatter) + " | " + status + " | " + assistant.getEmail() + " | " + room.getCode() + " | "
                 + email;
         return template;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

@@ -9,24 +9,13 @@ import java.util.ArrayList;
  */
 public class BookingSystem {
 
-    private class Slot {
-        private LocalDateTime dateTime;
-
-        private int index;
-
-        public Slot(LocalDateTime dateTime, int index) {
-            this.dateTime = dateTime;
-            this.index = index;
-        }
-    }
-
     private ArrayList<BookableRoom> bookableRooms;
 
     private ArrayList<AssistantOnShift> assistantsOnShift;
 
     private ArrayList<Booking> bookings;
 
-    private ArrayList<Slot> slots;
+    private int testID;
 
     /**
      * Constructor
@@ -35,16 +24,23 @@ public class BookingSystem {
         bookableRooms = new ArrayList<BookableRoom>();
         assistantsOnShift = new ArrayList<AssistantOnShift>();
         bookings = new ArrayList<Booking>();
+        testID = 0;
     }
 
     /**
      * Adds BookableRoom to array
      *
      * @param bookableRoom
+     * @throws IllegalArgumentException
      */
-    public void addBookableRoom(BookableRoom bookableRoom) {
+    public void addBookableRoom(BookableRoom bookableRoom) throws IllegalArgumentException{
+        // Checks that bookable room for this room and time have not been created
+        for (BookableRoom room: bookableRooms) {
+            if(room.getCode() == bookableRoom.getCode() && room.getSlotStart() == bookableRoom.getSlotStart()) {
+                throw new IllegalArgumentException("Bookable room already exists");
+            }
+        }
         this.bookableRooms.add(bookableRoom);
-        //TODO check if bookable room already exists
     }
 
     /**
@@ -112,18 +108,23 @@ public class BookingSystem {
         return template;
     }
 
+    public ArrayList<Booking> getBookings() {
+        return bookings;
+    }
+
     public void addBooking(Booking booking) {
+        bookings.add(booking);
     }
 
 
     /**
      * Takes a datetime, and matches a bookable room and assistant at that time
      *
-     * @param startTimeString
+     * @param startTime
      */
-    public void addBookingAtTime(String startTimeString, String email) throws IllegalArgumentException {
+    public void addBookingAtTime(LocalDateTime startTime, String email) throws IllegalArgumentException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime startTime = LocalDateTime.parse(startTimeString, formatter);
+
 
         // Searches through all bookable rooms and assistants on shift, until it finds a valid booking opportunity
         boolean found = false;
