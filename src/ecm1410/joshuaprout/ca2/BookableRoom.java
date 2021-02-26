@@ -27,7 +27,6 @@ public class BookableRoom {
     public BookableRoom(Room room, String timeString) throws DateTimeParseException {
         this.room = room;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        // TODO validate time is between 7 and 10
         this.slotStart = LocalDateTime.parse(timeString, formatter);
         this.occupancy = 0;
         updateStatus();
@@ -62,7 +61,7 @@ public class BookableRoom {
     /**
      * Updates the status of the room, whether it is EMPTY, AVAILABLE or FULL
      */
-    private void updateStatus() {
+    public void updateStatus() {
         if (occupancy == 0) {
             status = "EMPTY";
         } else if (occupancy < room.getCapacity()) {

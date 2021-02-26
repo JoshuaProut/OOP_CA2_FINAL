@@ -3,10 +3,10 @@ package ecm1410.joshuaprout.ca2;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 
 /**
- * An assistant available to perform a covid test within a 60 minute window.
+ * An assistant on a shift, lasting for 60 minutes starting from shiftStart.
+ * During this time they can perform one test.
  */
 public class AssistantOnShift {
 

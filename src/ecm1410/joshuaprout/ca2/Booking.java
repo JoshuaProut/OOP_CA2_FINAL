@@ -65,4 +65,12 @@ public class Booking {
     public void setComplete() {
         status = "COMPLETED";
     }
+
+    public AssistantOnShift getAssistant() {
+        return assistant;
+    }
+
+    public BookableRoom getRoom() {
+        return room;
+    }
 }

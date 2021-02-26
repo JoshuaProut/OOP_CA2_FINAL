@@ -12,7 +12,7 @@ public class University {
     private ArrayList<Room> rooms;
 
     /**
-     * Constructor for university
+     * Constructor
      */
     public University() {
         assistants = new ArrayList<Assistant>();
@@ -20,9 +20,9 @@ public class University {
     }
 
     /**
-     * Adds Assistant to University
+     * Adds Assistant to assistants list
      *
-     * @param assistant
+     * @param assistant Assistant to be added
      */
     public void addAssistant(Assistant assistant) {
         assistants.add(assistant);
@@ -31,7 +31,7 @@ public class University {
     /**
      * Adds Room to University
      *
-     * @param room
+     * @param room Room to be added
      */
     public void addRoom(Room room) {
         rooms.add(room);
@@ -40,7 +40,7 @@ public class University {
     /**
      * Returns a template string for all rooms
      *
-     * @return template string for all rooms
+     * @return template string for all rooms, each room seperated by newline character
      */
     public String listRooms() {
         String template = new String("\n");

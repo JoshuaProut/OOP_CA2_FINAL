@@ -36,7 +36,7 @@ public class BookingSystem {
     public void addBookableRoom(BookableRoom bookableRoom) throws IllegalArgumentException{
         // Checks that bookable room for this room and time have not been created
         for (BookableRoom room: bookableRooms) {
-            if(room.getCode() == bookableRoom.getCode() && room.getSlotStart() == bookableRoom.getSlotStart()) {
+            if(room.getCode().equals(bookableRoom.getCode()) && room.getSlotStart().equals(bookableRoom.getSlotStart())) {
                 throw new IllegalArgumentException("Bookable room already exists");
             }
         }
@@ -48,10 +48,15 @@ public class BookingSystem {
      *
      * @param assistantOnShift
      */
-    public void addAssistantOnShift(AssistantOnShift assistantOnShift) {
-        //TODO check that assistant not already assigned for same shift
+    public void addAssistantOnShift(AssistantOnShift assistantOnShift) throws IllegalArgumentException {
+        // Checks that assistant on shift for this assistant and time has not been created
+        for (AssistantOnShift assistant: assistantsOnShift) {
+            if (assistant.getEmail().equals(assistantOnShift.getEmail())
+                    && assistant.getShiftStart().equals(assistantOnShift.getShiftStart())) {
+                throw new IllegalArgumentException("Assistant on shift already exists");
+            }
+        }
         this.assistantsOnShift.add(assistantOnShift);
-
     }
 
     public void addBooking(Booking booking) {
@@ -166,6 +171,10 @@ public class BookingSystem {
     public void removeBooking(Booking booking) throws IllegalArgumentException {
         // Checks booking is scheduled, if complete it cannot be deleted
         if (booking.getStatus().equals("SCHEDULED")) {
+            // Releases assistant and room to be used for future bookings
+            booking.getAssistant().setFree();
+            booking.getRoom().decOccupancy();
+
             bookings.remove(booking);
         } else {
             throw new IllegalArgumentException("Booking is completed, cannot be removed");

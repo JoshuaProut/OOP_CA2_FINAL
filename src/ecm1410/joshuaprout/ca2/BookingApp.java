@@ -15,34 +15,16 @@ public class BookingApp {
      * @param args
      */
     public static void main(String[] args) {
-
-        BookingApp app = new BookingApp();
-
-        //Creates room
-        Room room = new Room("E123", 8);
-
-        //Creates Assistant
-        Assistant assistant = new Assistant("beans@uok.ac.uk", "Beans");
-
         //Creates University
         University uni = new University();
-
-        //Adds room and assistant
-        uni.addAssistant(assistant);
-        uni.addRoom(room);
 
         //Creates BookingSystem
         BookingSystem bookingSystem = new BookingSystem();
 
-        //Creates assistants on shift
-        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant, "27/02/2021 07:00"));
-
-        //Creates bookable rooms
-        bookingSystem.addBookableRoom(new BookableRoom(room, "27/02/2021 07:00"));
-
-
         Scanner input = new Scanner(System.in);
         String choice = "0";
+
+        loadInitialData(uni, bookingSystem);
 
         while (choice != "-1") {
             System.out.println("-------------------University of Knowledge - Covid Test-----------------------");
@@ -64,12 +46,16 @@ public class BookingApp {
             System.out.println("    8. Add");
             System.out.println("    9. Remove");
             System.out.println("    10. Conclude");
+            System.out.println("After selecting one of the options above, you will be presented other screens.");
+            System.out.println("If you press 0, you will be able to return to this main menu.");
+            System.out.println("Press -1 (or ctrl+c) to quit this application");
+
 
             choice = input.nextLine();
 
             switch (choice) {
                 case "1":
-                    System.out.println(bookingSystem.listRooms());
+                    listRooms(bookingSystem);
                     break;
                 case "2":
                     addRoom(uni, bookingSystem);
@@ -78,7 +64,7 @@ public class BookingApp {
                     removeRoom(bookingSystem);
                     break;
                 case "4":
-                    System.out.println(bookingSystem.listAssistants());
+                    listAssistants(bookingSystem);
                     break;
                 case "5":
                     addAssistant(uni, bookingSystem);
@@ -87,7 +73,7 @@ public class BookingApp {
                     removeAssistant(bookingSystem);
                     break;
                 case "7":
-                    System.out.println(bookingSystem.listBookings());
+                    listBookings(bookingSystem);
                     break;
                 case "8":
                     addBooking(uni, bookingSystem);
@@ -123,6 +109,7 @@ public class BookingApp {
             int index = 11;
             for (Assistant assistant : assistants) {
                 System.out.println(index + " " + assistant.getTemplate());
+                index++;
             }
 
             System.out.println("Please enter one of the following:\n");
@@ -134,20 +121,24 @@ public class BookingApp {
 
             if (!choice.equals("0") && !choice.equals("-1")) {
                 String[] choices = choice.split(" ", 2);
-                int i = Integer.parseInt(choices[0]);
+                int i = Integer.parseInt(choices[0])-11;
 
-                if (i > 10 && i <= index) {
+                if (i > 0 && i <= assistants.size()) {
                     try {
                         // Creates assistant on shift using the chosen assistant and the time part of the input string
 
-                        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistants.get(i - 11), choices[1]));
+                        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistants.get(i), choices[1]));
                         System.out.println("Assistant created successfully");
                     } catch (DateTimeParseException d) {
                         System.out.println("Invalid date format");
+                    } catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
                     }
                 } else {
                     System.out.println("Invalid choice");
                 }
+            } else if (choice.equals("-1")) {
+                System.exit(0);
             }
         }
     }
@@ -201,6 +192,8 @@ public class BookingApp {
                 } else {
                     System.out.println("Invalid choice");
                 }
+            } else if (choice.equals("-1")) {
+                System.exit(0);
             }
 
         }
@@ -257,6 +250,8 @@ public class BookingApp {
                     System.out.println("Invalid room choice");
                 }
 
+            } else if (choice.equals("-1")) {
+                System.exit(0);
             }
         }
     }
@@ -283,6 +278,83 @@ public class BookingApp {
             if (!choice.equals("0") && !choice.equals("-1")) {
                 Booking chosenBooking = bookings.get(Integer.parseInt(choice) - 11);
                 chosenBooking.setComplete();
+            } else if (choice.equals("-1")) {
+                System.exit(0);
+            }
+        }
+    }
+
+    private static void listRooms(BookingSystem bookingSystem) {
+        Scanner input = new Scanner(System.in);
+        String choice = "2";
+        while (!choice.equals("0")) {
+            System.out.println(bookingSystem.listRooms());
+            System.out.println("0. Back to main menu\n-1. Quit Application");
+            choice = input.nextLine();
+
+            if (choice.equals("-1")) {
+                System.exit(0);
+            }
+        }
+    }
+
+    private static void listAssistants(BookingSystem bookingSystem) {
+        Scanner input = new Scanner(System.in);
+        String choice = "2";
+        while (!choice.equals("0")) {
+            System.out.println(bookingSystem.listAssistants());
+            System.out.println("0. Back to main menu\n-1. Quit Application");
+            choice = input.nextLine();
+
+            if (choice.equals("-1")) {
+                System.exit(0);
+            }
+        }
+    }
+
+    private static void listBookings(BookingSystem bookingSystem) {
+        Scanner input = new Scanner(System.in);
+        String choice = "2";
+        ArrayList<Booking> bookings = bookingSystem.getBookings();
+
+        while (!choice.equals("0")) {
+            System.out.println("University of Knowledge - COVID test\n");
+            System.out.println("Select which booking to list:");
+            System.out.println("1. ALl\n2. Only bookings status: SCHEDULED\n3. Only bookings status: COMPLETED");
+            System.out.println("0. Back to main menu.\n-1. Quit Application");
+
+            choice = input.nextLine();
+
+            /*
+            if user selects 1 or any input not mentioned, all bookings are shown, 2 shows scheduled bookings, 3 shows completed bookings
+            any other input apart from 0 or -1 will display all bookings
+             */
+            switch (choice) {
+                case "2" -> {
+                    for (Booking booking : bookings) {
+                        if (booking.getStatus().equals("SCHEDULED")) {
+                            System.out.println(booking.getTemplate());
+                        }
+                    }
+                    System.out.println("0. Back to main menu.\n-1. Quit application");
+                }
+                case "3" -> {
+                    for (Booking booking : bookings) {
+                        if (booking.getStatus().equals("COMPLETED")) {
+                            System.out.println(booking.getTemplate());
+                        }
+                    }
+                    System.out.println("0. Back to main menu.\n-1. Quit application");
+                }
+                case "-1" -> {
+                    System.exit(0);
+                }
+                default -> {
+                    for (Booking booking : bookings) {
+                        System.out.println(booking.getTemplate());
+                    }
+                    System.out.println("0. Back to main menu.\n-1. Quit application");
+                }
             }
         }
     }
@@ -297,7 +369,7 @@ public class BookingApp {
             // List of assistants not assigned to a booking
             ArrayList<AssistantOnShift> freeAssistantsOnShift = new ArrayList<>();
             int i = 11;
-            for (AssistantOnShift assistantOnShift: bookingSystem.getAssistantsOnShift()) {
+            for (AssistantOnShift assistantOnShift : bookingSystem.getAssistantsOnShift()) {
                 if (assistantOnShift.getStatus().equals("FREE")) {
                     // Adds to array of free assistants and prints with an index
                     freeAssistantsOnShift.add(assistantOnShift);
@@ -309,8 +381,6 @@ public class BookingApp {
             System.out.println("Please enter one of the following\n");
             System.out.println("The sequential ID to select the assistant on shift to be removed");
             System.out.println("0. Back to main menu.\n-1. Quit application\n");
-
-
 
             choice = input.nextLine();
 
@@ -324,6 +394,9 @@ public class BookingApp {
                 } else {
                     System.out.println("Error!\nIndex not in range");
                 }
+            }
+            if (choice.equals("-1")) {
+                System.exit(0);
             }
         }
     }
@@ -368,6 +441,9 @@ public class BookingApp {
                     System.out.println("Error!\nIndex not in range");
                 }
             }
+            if (choice.equals("-1")) {
+                System.exit(0);
+            }
         }
     }
 
@@ -384,6 +460,7 @@ public class BookingApp {
                     // Adds to empty room and prints with index
                     emptyRooms.add(room);
                     System.out.println(i + " " + room.getTemplate());
+                    i++;
                 }
             }
 
@@ -392,15 +469,62 @@ public class BookingApp {
             if (!choice.equals("0") && !choice.equals("-1")) {
                 // Checks index in range
                 Integer choiceInt = Integer.parseInt(choice) - 11;
-                if (choiceInt > 10 && choiceInt < emptyRooms.size()) {
+                if (choiceInt >= 0 && choiceInt < emptyRooms.size()) {
                     // Removes room at index
                     bookingSystem.removeRoom(emptyRooms.get(choiceInt));
                     System.out.println("Removed room successfully");
                 } else {
                     System.out.println("Index not in range");
                 }
+            } if (choice.equals("-1")) {
+                System.exit(0);
             }
         }
+    }
+
+    private static void loadInitialData(University uni, BookingSystem bookingSystem) {
+        // Adds assistants to uni
+        Assistant assistant1 = new Assistant("BP@uok.ac.uk", "Bruno Powrzonik");
+        Assistant assistant2 = new Assistant("CS@uok.ac.uk", "Chuck Sneed");
+        Assistant assistant3 = new Assistant("JC@uok.ac.uk", "Janny Cope");
+        uni.addAssistant(assistant1);
+        uni.addAssistant(assistant2);
+        uni.addAssistant(assistant3);
+
+        // Adds rooms to uni
+        Room room1 = new Room("E12", 3);
+        Room room2 = new Room("D02", 7);
+        Room room3 = new Room("E09", 2);
+        uni.addRoom(room1);
+        uni.addRoom(room2);
+        uni.addRoom(room3);
+
+
+        // Adds assistants on shift to booking system
+        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant1, "27/02/2021 07:00"));
+        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant1, "27/02/2021 08:00"));
+        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant2, "27/02/2021 08:00"));
+        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant2, "27/02/2021 09:00"));
+        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant3, "27/02/2021 07:00"));
+        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant3, "27/02/2021 08:00"));
+        bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant3, "27/02/2021 09:00"));
+
+
+        // Adds bookable rooms to booking system
+        bookingSystem.addBookableRoom(new BookableRoom(room1, "27/02/2021 07:00"));
+        bookingSystem.addBookableRoom(new BookableRoom(room1, "27/02/2021 08:00"));
+        bookingSystem.addBookableRoom(new BookableRoom(room1, "27/02/2021 09:00"));
+        bookingSystem.addBookableRoom(new BookableRoom(room2, "27/02/2021 07:00"));
+        bookingSystem.addBookableRoom(new BookableRoom(room2, "27/02/2021 08:00"));
+        bookingSystem.addBookableRoom(new BookableRoom(room2, "27/02/2021 09:00"));
+        bookingSystem.addBookableRoom(new BookableRoom(room3, "27/02/2021 07:00"));
+        bookingSystem.addBookableRoom(new BookableRoom(room3, "27/02/2021 08:00"));
+        bookingSystem.addBookableRoom(new BookableRoom(room3, "27/02/2021 09:00"));
+    }
+
+    private static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
 }
