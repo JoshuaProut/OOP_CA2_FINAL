@@ -14,7 +14,7 @@ public class Room {
      *
      * @param code     Must be unique
      * @param capacity Must be more than 0
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException If capacity is less than 0
      */
     public Room(String code, int capacity) throws IllegalArgumentException {
 
@@ -29,17 +29,28 @@ public class Room {
     }
 
     /**
+     * Returns formatted template string
+     *
      * @return template string, containing code and capacity
      */
     public String getTemplate() {
-        String template = "| " + code + " | " + capacity + " |";
-        return template;
+        return "| " + code + " | " + capacity + " |";
     }
 
+    /**
+     * Returns room code
+     *
+     * @return room code
+     */
     public String getCode() {
         return code;
     }
 
+    /**
+     * Gets capacity of the room, how many assistants can work in one room
+     *
+     * @return capacity
+     */
     public int getCapacity() {
         return capacity;
     }

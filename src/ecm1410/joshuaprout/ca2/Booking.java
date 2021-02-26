@@ -19,6 +19,18 @@ public class Booking {
 
     private LocalDateTime timeStart;
 
+    /**
+     * Constructor.
+     *
+     * Room must be empty or available, assistant must be free, email must end in @uok.ac.uk
+     *
+     * @param room The bookable room for the test to be performed in
+     * @param assistant The assistant on shift performing the test
+     * @param email The email of the student being tested
+     * @param timeStart The time the test session will start
+     * @throws IllegalArgumentException
+     */
+
     public Booking(BookableRoom room, AssistantOnShift assistant, String email,
                    LocalDateTime timeStart) throws IllegalArgumentException {
 
@@ -50,6 +62,10 @@ public class Booking {
         this.status = "SCHEDULED";
     }
 
+    /**
+     * Gets template, includes time start, status, assistant, room, and student email
+     * @return template string
+     */
     public String getTemplate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         String template = new String("");
@@ -58,18 +74,33 @@ public class Booking {
         return template;
     }
 
+    /**
+     * Gets status, either SCHEDULED or COMPLETED
+     * @return status
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * Sets the test as being COMPLETED
+     */
     public void setComplete() {
         status = "COMPLETED";
     }
 
+    /**
+     * Returns the assistant performing the test
+     * @return assistant
+     */
     public AssistantOnShift getAssistant() {
         return assistant;
     }
 
+    /**
+     * Returns the room that the test will be performed in
+     * @return
+     */
     public BookableRoom getRoom() {
         return room;
     }

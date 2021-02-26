@@ -71,14 +71,26 @@ public class BookableRoom {
         }
     }
 
+    /**
+     * Gets code
+     * @return code
+     */
     public String getCode() {
         return room.getCode();
     }
 
+    /**
+     * Gets start of time slot
+     * @return
+     */
     public LocalDateTime getSlotStart() {
         return slotStart;
     }
 
+    /**
+     * Gets status, whether the room is empty, available or full
+     * @return status string
+     */
     public String getStatus() {
         return status;
     }

@@ -1,12 +1,16 @@
 package ecm1410.joshuaprout.ca2;
 
-import java.awt.print.Book;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Main app for interacting with the system.
+ * <p>
+ * Provides a command line menu
+ */
 public class BookingApp {
 
     /**
@@ -24,8 +28,10 @@ public class BookingApp {
         Scanner input = new Scanner(System.in);
         String choice = "0";
 
+        // Loads initial data for testing
         loadInitialData(uni, bookingSystem);
 
+        // When the user inputs -1, the program will end
         while (choice != "-1") {
             System.out.println("-------------------University of Knowledge - Covid Test-----------------------");
             System.out.println("");
@@ -54,39 +60,17 @@ public class BookingApp {
             choice = input.nextLine();
 
             switch (choice) {
-                case "1":
-                    listRooms(bookingSystem);
-                    break;
-                case "2":
-                    addRoom(uni, bookingSystem);
-                    break;
-                case "3":
-                    removeRoom(bookingSystem);
-                    break;
-                case "4":
-                    listAssistants(bookingSystem);
-                    break;
-                case "5":
-                    addAssistant(uni, bookingSystem);
-                    break;
-                case "6":
-                    removeAssistant(bookingSystem);
-                    break;
-                case "7":
-                    listBookings(bookingSystem);
-                    break;
-                case "8":
-                    addBooking(uni, bookingSystem);
-                    break;
-                case "9":
-                    removeBooking(bookingSystem);
-                    break;
-                case "10":
-                    concludeBooking(bookingSystem);
-                    break;
-                default:
-                    System.out.println("Invalid option");
-
+                case "1" -> listRooms(bookingSystem);
+                case "2" -> addRoom(uni, bookingSystem);
+                case "3" -> removeRoom(bookingSystem);
+                case "4" -> listAssistants(bookingSystem);
+                case "5" -> addAssistant(uni, bookingSystem);
+                case "6" -> removeAssistant(bookingSystem);
+                case "7" -> listBookings(bookingSystem);
+                case "8" -> addBooking(uni, bookingSystem);
+                case "9" -> removeBooking(bookingSystem);
+                case "10" -> concludeBooking(bookingSystem);
+                default -> System.out.println("Invalid option");
             }
         }
     }
@@ -100,12 +84,15 @@ public class BookingApp {
     private static void addAssistant(University uni, BookingSystem bookingSystem) {
         Scanner input = new Scanner(System.in);
         String choice = "2";
+
         while (!choice.equals("0")) {
             System.out.println("-------------------University of Knowledge - Covid Test-----------------------\n");
             System.out.println("Adding assistant on shift\n");
 
-            // Lists available assistants from the university
+            // Gets available assistants from the university
             ArrayList<Assistant> assistants = uni.getAssistants();
+
+            // Lists assistants with an index
             int index = 11;
             for (Assistant assistant : assistants) {
                 System.out.println(index + " " + assistant.getTemplate());
@@ -113,7 +100,7 @@ public class BookingApp {
             }
 
             System.out.println("Please enter one of the following:\n");
-            System.out.println("The seqential ID of an assistant and date (dd/mm/yyyy), and a time (HH:MM), seperated by a whitespace.");
+            System.out.println("The sequential ID of an assistant and date (dd/mm/yyyy), and a time (HH:MM), separated by a whitespace.");
             System.out.println("0. Back to main menu");
             System.out.println("-1 Quit application");
 
@@ -121,9 +108,9 @@ public class BookingApp {
 
             if (!choice.equals("0") && !choice.equals("-1")) {
                 String[] choices = choice.split(" ", 2);
-                int i = Integer.parseInt(choices[0])-11;
+                int i = Integer.parseInt(choices[0]) - 11;
 
-                if (i > 0 && i <= assistants.size()) {
+                if (i >= 0 && i < assistants.size()) {
                     try {
                         // Creates assistant on shift using the chosen assistant and the time part of the input string
 
@@ -145,7 +132,7 @@ public class BookingApp {
 
     /**
      * Creates a new booking
-     * <p>
+     * 
      * Presents user with an indexed list of available timeslots, passes chosen timeslot and student email to
      * booking system
      *
@@ -256,6 +243,11 @@ public class BookingApp {
         }
     }
 
+    /**
+     * Completes a booking
+     *
+     * @param bookingSystem
+     */
     private static void concludeBooking(BookingSystem bookingSystem) {
         Scanner input = new Scanner(System.in);
         String choice = "2";
@@ -284,6 +276,11 @@ public class BookingApp {
         }
     }
 
+    /**
+     * Lists all of the bookable rooms
+     *
+     * @param bookingSystem
+     */
     private static void listRooms(BookingSystem bookingSystem) {
         Scanner input = new Scanner(System.in);
         String choice = "2";
@@ -298,6 +295,11 @@ public class BookingApp {
         }
     }
 
+    /**
+     * Lists all Assistants on shift.
+     *
+     * @param bookingSystem
+     */
     private static void listAssistants(BookingSystem bookingSystem) {
         Scanner input = new Scanner(System.in);
         String choice = "2";
@@ -312,6 +314,13 @@ public class BookingApp {
         }
     }
 
+    /**
+     * Lists all bookings.
+     * <p>
+     * Has choice to view all bookings, scheduled bookings or completed bookings
+     *
+     * @param bookingSystem
+     */
     private static void listBookings(BookingSystem bookingSystem) {
         Scanner input = new Scanner(System.in);
         String choice = "2";
@@ -359,6 +368,11 @@ public class BookingApp {
         }
     }
 
+    /**
+     * Removes assistant on shift.
+     *
+     * @param bookingSystem
+     */
     private static void removeAssistant(BookingSystem bookingSystem) {
         Scanner input = new Scanner(System.in);
         String choice = "2";
@@ -401,6 +415,13 @@ public class BookingApp {
         }
     }
 
+    /**
+     * Removes booking.
+     * <p>
+     * Can only remove a scheduled booking, completed bookings must be kept
+     *
+     * @param bookingSystem
+     */
     private static void removeBooking(BookingSystem bookingSystem) {
         Scanner input = new Scanner(System.in);
         String choice = "2";
@@ -447,6 +468,13 @@ public class BookingApp {
         }
     }
 
+    /**
+     * Removes bookable room.
+     * <p>
+     * Can only remove an empty room
+     *
+     * @param bookingSystem
+     */
     private static void removeRoom(BookingSystem bookingSystem) {
         Scanner input = new Scanner(System.in);
         String choice = "2";
@@ -476,12 +504,19 @@ public class BookingApp {
                 } else {
                     System.out.println("Index not in range");
                 }
-            } if (choice.equals("-1")) {
+            }
+            if (choice.equals("-1")) {
                 System.exit(0);
             }
         }
     }
 
+    /**
+     * Loads initial data for testing
+     *
+     * @param uni
+     * @param bookingSystem
+     */
     private static void loadInitialData(University uni, BookingSystem bookingSystem) {
         // Adds assistants to uni
         Assistant assistant1 = new Assistant("BP@uok.ac.uk", "Bruno Powrzonik");
@@ -499,7 +534,6 @@ public class BookingApp {
         uni.addRoom(room2);
         uni.addRoom(room3);
 
-
         // Adds assistants on shift to booking system
         bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant1, "27/02/2021 07:00"));
         bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant1, "27/02/2021 08:00"));
@@ -508,7 +542,6 @@ public class BookingApp {
         bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant3, "27/02/2021 07:00"));
         bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant3, "27/02/2021 08:00"));
         bookingSystem.addAssistantOnShift(new AssistantOnShift(assistant3, "27/02/2021 09:00"));
-
 
         // Adds bookable rooms to booking system
         bookingSystem.addBookableRoom(new BookableRoom(room1, "27/02/2021 07:00"));
@@ -520,11 +553,8 @@ public class BookingApp {
         bookingSystem.addBookableRoom(new BookableRoom(room3, "27/02/2021 07:00"));
         bookingSystem.addBookableRoom(new BookableRoom(room3, "27/02/2021 08:00"));
         bookingSystem.addBookableRoom(new BookableRoom(room3, "27/02/2021 09:00"));
-    }
 
-    private static void clearScreen() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        // Creates bookings
+        BookableRoom bookableRoom = new BookableRoom(room3, "27/02/2021 07:00");
     }
-
 }

@@ -38,63 +38,20 @@ public class University {
     }
 
     /**
-     * Returns a template string for all rooms
+     * Gets assistants
      *
-     * @return template string for all rooms, each room seperated by newline character
+     * @return Arraylist of assistants
      */
-    public String listRooms() {
-        String template = new String("\n");
-        for (Room room : rooms) {
-            template += room.getTemplate() + "\n";
-        }
-
-        return template;
-    }
-
-    /**
-     * Returns template string for all assistants
-     *
-     * @return template string for all assistants
-     */
-    public String listAssistants() {
-        String template = new String("\n");
-        for (Assistant assistant : assistants) {
-            template += assistant.getTemplate();
-        }
-
-        return template;
-    }
-
     public ArrayList<Assistant> getAssistants() {
         return assistants;
     }
 
+    /**
+     * Gets rooms
+     *
+     * @return ArrayList of rooms
+     */
     public ArrayList<Room> getRooms() {
         return rooms;
-    }
-
-    /**
-     * Returns Room for a given code
-     *
-     * @param code - code for the room
-     * @return Room
-     * @throws IllegalArgumentException
-     */
-    public Room getRoomByCode(String code) throws IllegalArgumentException {
-        for (Room room: rooms) {
-            if (room.getCode().equals(code)) {
-                return room;
-            }
-        }
-        throw new IllegalArgumentException("Unknown code");
-    }
-
-    public Assistant getAssistantByEmail(String email) throws IllegalArgumentException {
-        for (Assistant assistant : assistants) {
-            if (assistant.getEmail().equals(email)) {
-                return assistant;
-            }
-        }
-        throw new IllegalArgumentException("Unkown email");
     }
 }

@@ -1,23 +1,24 @@
 package ecm1410.joshuaprout.ca2;
 
 /**
- * A test assistant
+ * A test assistant belonging to the university
  */
 public class Assistant {
 
-    private String email;
+    private final String email;
 
-    private String name;
+    private final String name;
 
     /**
      * Constructor for Assistant class
      *
      * @param email Must end in @uok.ac.uk
      * @param name  Must not be empty
+     * @throws IllegalArgumentException If email does not fit @uok.ac.uk
      */
-    public Assistant(String email, String name) {
+    public Assistant(String email, String name) throws IllegalArgumentException {
 
-        if (email.endsWith("@uok.ac.uk") == false) {
+        if (!email.endsWith("@uok.ac.uk")) {
             throw new IllegalArgumentException("Email must end with 'uok.ac.uk'");
         }
 
@@ -27,13 +28,18 @@ public class Assistant {
 
     /**
      * Returns template for Assistant.
+     *
      * Contains name and email
+     * @return Template string
      */
     public String getTemplate() {
-        String template = "| " + name + " | " + email + " |";
-        return template;
+        return "| " + name + " | " + email + " |";
     }
 
+    /**
+     * Gets email
+     * @return Email string
+     */
     public String getEmail() {
         return email;
     }

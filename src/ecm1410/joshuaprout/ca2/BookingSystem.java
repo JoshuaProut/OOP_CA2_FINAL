@@ -97,18 +97,36 @@ public class BookingSystem {
         }
     }
 
+    /**
+     * Gets assistants on shifts
+     * @return ArrayList of assistants on shift
+     */
     public ArrayList<AssistantOnShift> getAssistantsOnShift() {
         return assistantsOnShift;
     }
 
+    /**
+     * Gets bookings
+     * @return ArrayList of bookings
+     */
     public ArrayList<Booking> getBookings() {
         return bookings;
     }
 
+    /**
+     * Gets bookable rooms
+     *
+     * @return ArrayList of bookable rooms
+     */
     public ArrayList<BookableRoom> getBookableRooms() {
         return bookableRooms;
     }
 
+    /**
+     * Gets available time slots that a booking can be assigned to
+     *
+     * @return ArrayList of LocalDateTime slot times
+     */
     public ArrayList<LocalDateTime> getSlots() {
         ArrayList<LocalDateTime> availableTimes = new ArrayList<>();
 
@@ -139,15 +157,6 @@ public class BookingSystem {
         return template;
     }
 
-    public String listBookings() {
-        String template = new String("\n");
-
-        for (Booking booking : bookings) {
-            template = template + booking.getTemplate() + "\n";
-        }
-        return template;
-    }
-
     /**
      * Returns formatted string as lines of BookableRoom template strings
      *
@@ -162,12 +171,26 @@ public class BookingSystem {
         return template;
     }
 
+    /**
+     * Removes assistant on shift.
+     *
+     * Assistant can only be removed if they are FREE and not assigned to a shift
+     * @param assistantOnShift assistant on shift to be removed
+     */
     public void removeAssistantOnShift(AssistantOnShift assistantOnShift) {
         if (assistantOnShift.getStatus().equals("FREE")) {
             assistantsOnShift.remove(assistantOnShift);
         }
     }
 
+    /**
+     * Removes booking.
+     *
+     * Booking must be scheduled and not completed.
+     *
+     * @param booking booking to be added
+     * @throws IllegalArgumentException if booking can
+     */
     public void removeBooking(Booking booking) throws IllegalArgumentException {
         // Checks booking is scheduled, if complete it cannot be deleted
         if (booking.getStatus().equals("SCHEDULED")) {
@@ -181,6 +204,12 @@ public class BookingSystem {
         }
     }
 
+    /**
+     * Remove room.
+     *
+     * Room must be empty to be removed
+     * @param bookableRoom room to be removed
+     */
     public void removeRoom(BookableRoom bookableRoom) {
         if (bookableRoom.getStatus().equals("EMPTY")) {
             bookableRooms.remove(bookableRoom);
